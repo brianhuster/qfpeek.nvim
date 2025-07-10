@@ -1,0 +1,46 @@
+*qfpeek.nvim*  Quickfix and Location List preview
+
+                             NVIM REFERENCE MANUAL
+
+                                       Type |gO| to see the table of contents.
+
+==============================================================================
+Introduction                                      *qfpeek*
+
+|qfpeek.nvim| is a Nvim plugin that provides quick preview functionality
+for quickfix and location list entries in a floating window. It allows you to
+peek at the content of a quickfix/location list entry without leaving the
+quickfix window.
+
+Below, we will use the term "quickfix" for both quickfix and location list.
+
+==============================================================================
+Configuration                                           *qfpeek-config*
+
+*g:qfpeek_floatwin_opts*
+    Customize floating window appearance. See
+    |vim.lsp.util.open_floating_preview.Opts| for all available fields of this
+    option. For example:
+>lua
+    ---@type vim.lsp.util.open_floating_preview.Opts
+    vim.g.qfpeek_floatwin_opts = {
+      width = 60,
+      height = 10
+    }
+<
+*g:qfpeek_map*
+    Customize mapping. By default set to `K`. To disable mapping, set to an
+    empty string.
+
+==============================================================================
+Commands                                               *qfpeek-commands*
+
+*:QfPeek*
+    Open a floating preview window for the quickfix entry under the cursor.
+    This command is only available in quickfix buffer.
+
+    By default, |qfpeek.nvim| also map `K` to |:QfPeek| for the `qf` buffer,
+    so you can just press `K` to peek the quickfix entry. To customize this
+    behavior, set |g:qfpeek_map|
+
+  vim:tw=78:ts=8:sw=4:sts=4:et:ft=help:norl:
