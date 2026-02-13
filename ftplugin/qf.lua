@@ -2,7 +2,6 @@ local qfpeek = require('qfpeek')
 
 local buf = vim.api.nvim_get_current_buf()
 
-vim.g.qfpeek_floatwin_opts = vim.g.qfpeek_floatwin_opts or qfpeek.default_floatwin_opts
 vim.g.qfpeek_map = vim.g.qfpeek_map or 'K'
 
 vim.api.nvim_buf_create_user_command(buf, "QfPeek", qfpeek.on_cmd, {

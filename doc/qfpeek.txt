@@ -18,11 +18,10 @@ Below, we will use the term "quickfix" for both quickfix and location list.
 Configuration                                           *qfpeek-config*
 
 *g:qfpeek_floatwin_opts*
-    Customize floating window appearance. See
-    |vim.lsp.util.open_floating_preview.Opts| for all available fields of this
-    option. For example:
+    Customize floating window appearance. See |nvim_open_win()| for all
+    available fields of this option. For example:
 >lua
-    ---@type vim.lsp.util.open_floating_preview.Opts
+    ---@type vim.api.keyset.win_config
     vim.g.qfpeek_floatwin_opts = {
       width = 60,
       height = 10

@@ -1,12 +1,38 @@
 local api = vim.api
 local ns = api.nvim_create_namespace('QfPeek')
+local augroup = api.nvim_create_augroup('QfPeek', {})
 
 local M = {}
 
-M.default_floatwin_opts = {
-	width = 60,
-	height = 10
-}
+---@param buf number
+---@param enter boolean
+---@param opts? vim.api.keyset.win_config
+---@return number win_id 0 if failed
+local function open_win(buf, enter, opts)
+	local default_opts = {
+		relative = "win",
+        win = api.nvim_get_current_win(),
+		anchor = "SW",
+		row = -1,
+		col = 1,
+		width = api.nvim_win_get_width(0),
+        height = vim.o.previewheight,
+		title = "QfPeek",
+		title_pos = "center",
+	}
+	opts = vim.tbl_deep_extend("force", default_opts, opts or {})
+    local win = api.nvim_open_win(buf, enter, opts)
+    api.nvim_create_autocmd("WinLeave", {
+		group = augroup,
+        callback = function()
+			if api.nvim_get_current_win == win then
+				api.nvim_win_close(0, true)
+			end
+		end,
+	})
+
+	return win
+end
 
 function M.on_cmd()
 	local line = vim.fn.line('.') -- 1-based line index
@@ -19,22 +45,20 @@ function M.on_cmd()
 	if not item then
 		return
 	end
-	local bufnr, lnum, end_lnum, col, end_col = item.bufnr, item.lnum, item.end_lnum, item.col, item.end_col
-	local floating_preview_opts = vim.tbl_deep_extend('force', M.default_floatwin_opts, vim.g.qfpeek_floatwin_opts)
-	local _, winid = vim.lsp.util.open_floating_preview({}, '', floating_preview_opts)
-	api.nvim_win_set_buf(winid, bufnr)
+	local buf, lnum, end_lnum, col, end_col = item.bufnr, item.lnum, item.end_lnum, item.col, item.end_col
+	local popup = open_win(buf, true, vim.g.qfpeek_floatwin_opts)
 
 	lnum = lnum > 0 and lnum or 1
 	col = col > 0 and col or 1
-	api.nvim_win_set_cursor(winid, { lnum, col - 1 })
+	api.nvim_win_set_cursor(popup, { lnum, col - 1 })
 
 	end_lnum = end_lnum > 0 and end_lnum or lnum
 	end_col = end_col > 0 and end_col or col
-	vim.hl.range(bufnr, ns, 'Substitute', { lnum - 1, col - 1 }, { end_lnum - 1, end_col - 1 })
+	vim.hl.range(buf, ns, 'Substitute', { lnum - 1, col - 1 }, { end_lnum - 1, end_col - 1 })
 	api.nvim_create_autocmd('WinClosed', {
-		pattern = tostring(winid),
+		pattern = tostring(popup),
 		callback = function()
-			api.nvim_buf_clear_namespace(bufnr, ns, lnum - 1, end_lnum)
+			api.nvim_buf_clear_namespace(buf, ns, lnum - 1, end_lnum)
 		end,
 	})
 end
