@@ -3,7 +3,7 @@
 A minimal Neovim plugin that provides quick preview functionality for quickfix and
 location list entries in a floating window.
 
-<img width="1281" height="289" alt="image" src="https://github.com/user-attachments/assets/887d10ee-f897-4384-8e45-339e2151e326" />
+<img width="1900" height="918" alt="image" src="https://github.com/user-attachments/assets/f8b352f8-9a10-4527-8902-0f6c67334812" />
 
 ## Installation
 
